@@ -1,132 +1,78 @@
-import axios, { type AxiosRequestConfig } from 'axios'
-
-axios.defaults.baseURL = localStorage.getItem('BASE_URL')?.toString()
-axios.defaults.timeout = 20 * 1000
-axios.defaults.maxBodyLength = 5 * 1024 * 1024
-axios.defaults.withCredentials = true
-
-axios.interceptors.request.use(
-  (config: AxiosRequestConfig | any) => {
-    config.params = {
-      ...config.params,
-      t: Date.now()
-    }
-    return config
-  },
-  function (error) {
-    return Promise.reject(error)
+// 封装axios
+import axios from 'axios'
+// 创建axios实例
+const service = axios.create({
+  baseURL: '/api',
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Access-Control-Allow-Origin': '*'
   }
-)
-
+})
+// 添加请求拦截器
+service.interceptors.request.use(config => {
+  // 在发送请求之前做些什么
+  return config
+})
 // 添加响应拦截器
-axios.interceptors.response.use(
-  (response) => {
-    return response
-  },
-  function (error) {
-    return Promise.reject(error)
-  }
-)
-
-interface ResType<T> {
-  code: number
-  data?: T
-  msg: string
-  err?: string
+service.interceptors.response.use(response => {
+  // 对响应数据做点什么
+  return response
+}, error => {
+  // 对响应错误做点什么
+  return Promise.reject(error)
+})
+// 封装get请求
+service.get = (url: string, params?: object) => {
+  return service({
+    url,
+    method: 'get',
+    params
+  })
+}
+// 封装post请求
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+service.post = (url: string, data?: object) => {
+  return service({
+    url,
+    method: 'post',
+    data
+  })
+}
+// 封装put请求
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+service.put = (url: string, data?: object) => {
+  return service({
+    url,
+    method: 'put',
+    data
+  })
 }
 
-interface Http {
-  get<T>(url: string, params?: unknown): Promise<T>
-
-  post<T>(url: string, params?: unknown): Promise<T>
-
-  upload<T>(url: string, params: unknown): Promise<T>
-
-  put<T>(url: string, params: unknown): Promise<T>
-
-  delete<T>(url: string, params: unknown): Promise<T>
-
-  download(url: string): void
+// 封装delete请求
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+service.delete = (url: string, data?: object) => {
+  return service({
+    url,
+    method: 'delete',
+    data
+  })
 }
 
-const http: Http = {
-  get (url, params) {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(url, { params })
-        .then((res) => {
-          resolve(res.data)
-        })
-        .catch((err) => {
-          reject(err.data)
-        })
-    })
-  },
-
-  post (url, params) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(url, JSON.stringify(params))
-        .then((res) => {
-          resolve(res.data)
-        })
-        .catch((err) => {
-          reject(err.data)
-        })
-    })
-  },
-
-  put (url, params) {
-    return new Promise((resolve, reject) => {
-      axios
-        .put(url, JSON.stringify(params))
-        .then((res) => {
-          resolve(res.data)
-        })
-        .catch((err) => {
-          reject(err.data)
-        })
-    })
-  },
-
-  delete (url, params) {
-    return new Promise((resolve, reject) => {
-      axios
-        .delete(url, { params })
-        .then((res) => {
-          resolve(res.data)
-        })
-        .catch((err) => {
-          reject(err.data)
-        })
-    })
-  },
-
-  upload (url, file) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(url, file, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-        .then((res) => {
-          resolve(res.data)
-        })
-        .catch((err) => {
-          reject(err.data)
-        })
-    })
-  },
-
-  download (url) {
-    const iframe = document.createElement('iframe')
-    iframe.style.display = 'none'
-    iframe.src = url
-    iframe.onload = function () {
-      document.body.removeChild(iframe)
-    }
-
-    document.body.appendChild(iframe)
-  }
+// 封装patch请求
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+service.patch = (url: string, data?: object) => {
+  return service({
+    url,
+    method: 'patch',
+    data
+  })
 }
 
-export default http
+// 导出
+export default service

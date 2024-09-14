@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-// import { axios } from '../utils/http/axios/Axios'
+import service from '@/utils/http/axios/Axios'
 const ruleFormRef = ref<FormInstance>()
 
 const ruleForm = reactive({
@@ -53,6 +53,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const login = () => {
   console.log('asd')
+  service.get('/user').then((res) => {
+    console.log(res)
+  })
 }
 </script>
 

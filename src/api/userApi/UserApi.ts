@@ -1,10 +1,14 @@
-import service from '../../utils/http/axios/Axios'
-// 封装GET请求
-export const getRequest = <T>(url: string, params?: object): Promise<T> => {
-  return service.get(url, { params })
-}
+import service from '@/utils/http/axios/Axios'
 
-// 封装POST请求
-export const postRequest = <T>(url: string, data?: object): Promise<T> => {
-  return service.post(url, data)
+/**
+ * 登录
+ * @param data
+ * @returns
+ */
+export const login = (data: any) => {
+  return service({
+    url: '/login',
+    method: 'post',
+    data
+  })
 }
