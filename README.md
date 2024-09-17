@@ -1,4 +1,8 @@
-# v3
+# vue3 typescript 练习
+
+### Customize configuration
+See [前端项目地址](https://github.com/opasvc/v3).
+
 
 ## Project setup
 ```
@@ -20,5 +24,3 @@ yarn build
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

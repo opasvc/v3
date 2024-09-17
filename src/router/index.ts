@@ -4,14 +4,14 @@ import LoginView from '../views/LoginView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'login',
-    component: LoginView
-  },
-  {
-    path: '/login',
-    name: 'login',
+    name: 'LoginView',
     component: LoginView
   }
+  // {
+  //   path: '/login',
+  //   name: 'LoginView',
+  //   component: LoginView
+  // }
 ]
 
 const router = createRouter({
