@@ -16,3 +16,7 @@ interface result {
 export async function login (data: userinfo) {
   return post<result>('/user/login', data)
 }
+
+export async function getUserInfo (data?: any) {
+  return get<result>('/user', data)
+}

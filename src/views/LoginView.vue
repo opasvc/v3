@@ -11,15 +11,18 @@
 import { ref, reactive, computed } from 'vue'
 import { login as userApi } from '../api/userApi/UserApi'
 import { ElMessage } from 'element-plus'
+import router from '@/router'
 const name = ref('')
 const from = reactive({ username: '', password: '' })
 const login = async () => {
   console.log(from)
   const r = await userApi(from)
   console.log(r)
-  name.value = r.data + r.localTime
   localStorage.setItem('Authorization', r.data)
   ElMessage.success('登录成功')
+  if (r.code === 200) {
+    router.push({ path: 'home' })
+  }
 }
 
 </script>
