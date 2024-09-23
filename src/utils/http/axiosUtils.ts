@@ -1,5 +1,5 @@
 // src/utils/http.ts
-
+import { ElMessage } from 'element-plus'
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 
 // 默认配置
@@ -7,7 +7,8 @@ const defaultOptions: AxiosRequestConfig = {
   baseURL: '/api',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 10000
 }
 
 // 创建 axios 实例
@@ -17,9 +18,14 @@ const service = axios.create(defaultOptions)
 service.interceptors.request.use(
   (config) => {
     // 在发送请求之前做些什么，比如添加 token 到 header
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {
+    ElMessage.error(error.message)
     // 对请求错误做些什么
     return Promise.reject(error)
   }
@@ -29,9 +35,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     // 对响应数据做点什么
-    return response.data
+    return response
   },
   (error: AxiosError) => {
+    ElMessage.error(error.message)
     // 对响应错误做点什么（比如统一处理错误信息）
     return Promise.reject(error)
   }

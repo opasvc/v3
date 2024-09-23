@@ -1,13 +1,18 @@
+import { post, get } from '@/utils/http/axiosUtils'
 
-/**
- * 登录
- * @param data
- * @returns
- */
-// export const login = (data: any) => {
-//   return service({
-//     url: '/login',
-//     method: 'post',
-//     data
-//   })
-// }
+interface userinfo {
+    username: string
+    password: string
+}
+
+interface result {
+    // token: userinfo[]
+    code: number
+    msg: string
+    data: any
+    localTime: string
+}
+
+export async function login (data: userinfo) {
+  return post<result>('/user/login', data)
+}
